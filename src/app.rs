@@ -7,11 +7,10 @@ use std::time::Duration;
 use std::vec;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::HtmlElement;
+use web_sys::HtmlInputElement;
 use web_sys::HtmlTrackElement;
 use web_sys::HtmlVideoElement;
 use web_sys::TextTrackMode;
-// use wasm_bindgen_futures::spawn_local;
-use web_sys::HtmlInputElement;
 use yew::platform::spawn_local;
 use yew::platform::time::sleep;
 use yew::prelude::*;
@@ -45,7 +44,6 @@ pub async fn tick_x(x: f64) {
 }
 
 pub async fn initialize_atomic_clocks() {
-    // aligning with atomic clocks :-)
     sleep(FIVE_SEC).await;
 }
 
@@ -106,46 +104,6 @@ pub fn Login(props: &LoginProps) -> Html {
             }
         })
     };
-    // let login1 = {
-    //     let username = username.clone();
-    //     let password = password.clone();
-    //     let login_input_ref = login_input_ref.clone();
-    //     let login_input_ref2 = login_input_ref2.clone();
-    //     Callback::from(move |_| {
-    //         username.set(
-    //             login_input_ref
-    //                 .cast::<web_sys::HtmlInputElement>()
-    //                 .unwrap()
-    //                 .value(),
-    //         );
-    //         password.set(
-    //             login_input_ref2
-    //                 .cast::<web_sys::HtmlInputElement>()
-    //                 .unwrap()
-    //                 .value(),
-    //         );
-    //     })
-    // };
-    // let login2 = {
-    //     let username = username.clone();
-    //     let password = password.clone();
-    //     let login_input_ref = login_input_ref.clone();
-    //     let login_input_ref2 = login_input_ref2.clone();
-    //     Callback::from(move |_| {
-    //         username.set(
-    //             login_input_ref
-    //                 .cast::<web_sys::HtmlInputElement>()
-    //                 .unwrap()
-    //                 .value(),
-    //         );
-    //         password.set(
-    //             login_input_ref2
-    //                 .cast::<web_sys::HtmlInputElement>()
-    //                 .unwrap()
-    //                 .value(),
-    //         );
-    //     })
-    // };
     let login_msg = use_state(String::new);
     {
         let login_msg = login_msg.clone();
@@ -245,7 +203,6 @@ pub fn Episodes(props: &SearchResult) -> Html {
                         return;
                     }
 
-                    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
                     let new_msg = invoke_checked(
                         "get_episodes",
                         to_value(&EpOrSeries {
@@ -284,10 +241,7 @@ pub fn Episodes(props: &SearchResult) -> Html {
 
     let scoped_sr = selected_episode;
     let curr_sr = use_state(|| false);
-    // let scoped_sr = selected_episode.clone();// <img height="30%" width="30%" class="seasonthumb" src={}/>
     let curr_sr2 = curr_sr.clone();
-    // {
-    // }
     if *curr_sr2 {
         curr_sr2.set(false);
         return html! {<ViewEp ep_id={scoped_sr.to_string()} ep_type={"main".to_string()} cb={
@@ -310,8 +264,6 @@ pub fn Episodes(props: &SearchResult) -> Html {
                 Callback::from(move |_| {
                     let y3=y2.clone();
                     let scoped_sr=scoped_sr2.clone();
-                    // let res = (y3.id.clone().to_owned(),y3.name.clone().to_owned());
-                    // log(&res.0);
                     scoped_sr.set(y3.id.clone().to_owned());
                 })
             }
@@ -466,8 +418,6 @@ pub fn ViewEp(props: &Nep) -> Html {
                     if (sr).is_empty() {
                         return;
                     }
-                    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-                    // log("Invoked");
                     let new_msg = invoke_checked(
                         "view_episode",
                         to_value(&Ep {
@@ -477,7 +427,6 @@ pub fn ViewEp(props: &Nep) -> Html {
                         .unwrap(),
                     )
                     .await;
-                    // log("After Invoked");
                     let b = match new_msg {
                         Ok(c) => Some(c),
                         Err(c) => {
@@ -575,36 +524,6 @@ pub fn ViewEp(props: &Nep) -> Html {
         hls2.set(hls5.clone().set_level(tempa.parse::<i32>().unwrap()));})} class="quality">{levels.0.get(i as usize).unwrap()}</a>});
     }
 
-    // let onplaypause = Callback::from(move |_| {
-    //     let a = web_sys::window()
-    //         .unwrap()
-    //         .document()
-    //         .unwrap()
-    //         .get_element_by_id("mainvideo")
-    //         .unwrap()
-    //         .dyn_into::<HtmlVideoElement>()
-    //         .unwrap();
-    //     if a.current_time() {
-    //         a.play().unwrap();
-    //         web_sys::window()
-    //             .unwrap()
-    //             .document()
-    //             .unwrap()
-    //             .get_element_by_id("playpause-btn")
-    //             .unwrap()
-    //             .set_class_name("pause-button");
-    //     } else {
-    //         a.pause().unwrap();
-    //         web_sys::window()
-    //             .unwrap()
-    //             .document()
-    //             .unwrap()
-    //             .get_element_by_id("playpause-btn")
-    //             .unwrap()
-    //             .set_class_name("play-button");
-    //     }
-    // });
-
     let onplaypause = Callback::from(move |_| {
         let a = web_sys::window()
             .unwrap()
@@ -642,15 +561,7 @@ pub fn ViewEp(props: &Nep) -> Html {
 
     </video>
     <Controls lev_list={level_list} loading={*is_loading} playpausecb={onplaypause.clone()} progress={0_f64}/>
-    // <div id="video-controls" class="controls display-control">
-    //       <button id="quality-btn" class="dropbtn btn-settings">
-    //       <div id="quality" class="dropdown-content">{level_list}</div></button>
-    //       <button id="fs-btn" class="fs-button" onclick={onclickfs}></button>
-    //     </div>
-    // <div id="controls-right" class="controls clr">
-    // <button id="playpause-btn" class="play-button" onclick={onplaypause}></button>
-    // <progress id="progress" class="progress" value={video_progress().to_string()}></progress>
-    // <div id="duration" class="duration">{dur.to_string()}</div></div>
+
     </div>
     <div class="nextepsGrid"><b>{"Next Episodes :"}</b>{c}</div>
     </div>
@@ -793,20 +704,6 @@ pub fn Controls(props: &ControlsProps) -> Html {
             ));
         }
     });
-    // let hidecontrols: Callback<()> = Callback::from(move |_| {
-    //     let ctrls = web_sys::window()
-    //         .unwrap()
-    //         .document()
-    //         .unwrap()
-    //         .get_elements_by_class_name("controls");
-    //     for i in 0..ctrls.length() {
-    //         ctrls
-    //             .item(i)
-    //             .unwrap()
-    //             .set_attribute("style", "visibility:hidden;")
-    //             .unwrap();
-    //     }
-    // });
     let progcb3 = progresscb;
     use_effect(move || {
         let progcb2 = progcb3;
@@ -814,30 +711,7 @@ pub fn Controls(props: &ControlsProps) -> Html {
             tick_x(0.1_f64).await;
             progcb2.emit(());
         });
-        // spawn_local(async move {
-        //     if
-        //     web_sys::window().unwrap().set_onmousemove(value)
-        //     tick_x(5_f64).await;
-        //     progcb2.emit(());
-        // });
-        // spawn_local(async move {
-        //     tick_x(5_f64).await;
-        //     hidecontrols.emit(());
-        // });
     });
-    // let progcb2 = progresscb.clone();
-    // use_effect_with_deps(
-    //     move |_| {
-    //         progresscb.clone().emit(());
-    //     },
-    //     (),
-    // );
-    // use_effect_with_deps(
-    //     move |_| {
-    //         progcb2.clone().emit(());
-    //     },
-    //     pu,
-    // );
     let fsstate = use_state(|| false);
     let onclickfs = Callback::from(move |_| {
         if !*fsstate {
@@ -967,16 +841,6 @@ pub fn Controls(props: &ControlsProps) -> Html {
     });
     let mut tracks = vec![html! {}];
     for i in 0..tracklist.length() {
-        // if tracklist.get(i).unwrap().mode() == web_sys::TextTrackMode::Showing {
-        //     active_track.set(i);
-        // }
-        // else {
-        //     tracklist
-        //         .get_track_by_id("sub-0")
-        //         .unwrap()
-        //         .set_mode(TextTrackMode::Showing);
-        //     active_track.set(0);
-        // }
         tracks.push(html!{<a onclick={settrack.clone()} id={i.to_string()} class="subtitle">{tracklist.get(i).unwrap().label()}</a>});
     }
     let a = html! {<>
@@ -1082,8 +946,6 @@ pub fn NextEps(props: &Nep) -> Html {
                     if ep_id2.is_empty() {
                         return;
                     }
-
-                    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
                     let new_msg = invoke_checked(
                         "get_episodes",
                         to_value(&EpOrSeries {
@@ -1154,8 +1016,6 @@ pub fn Series(props: &SearchResult) -> Html {
                     if series_name.is_empty() {
                         return;
                     }
-
-                    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
                     let new_msg = invoke_checked(
                         "get_seasons",
                         to_value(&SeriesName {
@@ -1191,7 +1051,6 @@ pub fn Series(props: &SearchResult) -> Html {
     }
     let selected_episode = use_state(|| (String::from(""), String::from("")));
 
-    // <img height="30%" width="30%" class="seasonthumb" src={}/>
     let scoped_sr = selected_episode;
     let mut a = vec![html! {}];
     let srs = search_result;
@@ -1225,15 +1084,6 @@ pub fn Series(props: &SearchResult) -> Html {
     a.into_iter().collect::<Html>()
 }
 
-// pub fn gen_seasonview(sr: UseStateHandle<Vec<SearchResult>>) -> Html {
-//     let mut a = vec![html! {<div></div>}];
-//     a.push(html! {<div></div>});
-//     a.push(html! {<div></div>});
-//     a.push(html! {<div></div>});
-//     a.into_iter().collect::<Html>()
-//     // html!{}
-// }
-
 #[function_component]
 pub fn Search(props: &SearchProps) -> Html {
     let SearchProps { search_string } = props;
@@ -1242,38 +1092,6 @@ pub fn Search(props: &SearchProps) -> Html {
 
     let series_name = use_state(|| search_string.clone());
     let search_result: UseStateHandle<Vec<SearchResult>> = use_state(Vec::new);
-    // {
-    //     let search_res = search_result.clone();
-    //     use_effect_with_deps(
-    //         move |_| {
-    //             spawn_local(async move {
-    //                 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    //                 let new_msg = invoke_checked_no_arg("get_recs").await;
-    //                 let b = match new_msg {
-    //                     Ok(c) => Some(c),
-    //                     Err(c) => {
-    //                         log(&c.as_string().unwrap());
-    //                         None
-    //                     }
-    //                 };
-    //                 if let Some(bs) = b {
-    //                     let a: Result<Vec<SearchResult>, serde_wasm_bindgen::Error> =
-    //                         serde_wasm_bindgen::from_value(bs);
-    //                     match a {
-    //                         Ok(mess) => {
-    //                             for i in (mess).iter() {
-    //                                 log(&i.name);
-    //                             }
-    //                             search_res.set(mess);
-    //                         }
-    //                         Err(e) => log(&format!("{}", e)),
-    //                     }
-    //                 }
-    //             });
-    //         },
-    //         (),
-    //     );
-    // }
     {
         let search_result = search_result.clone();
         let series_name = series_name.clone();
@@ -1285,7 +1103,6 @@ pub fn Search(props: &SearchProps) -> Html {
                     let new_msg: Result<JsValue, JsValue> = if series_name.is_empty() {
                         invoke_checked_no_arg("get_recs").await
                     } else {
-                        // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
                         invoke_checked(
                             "search_crunchy",
                             to_value(&SeriesName {
@@ -1307,9 +1124,6 @@ pub fn Search(props: &SearchProps) -> Html {
                             serde_wasm_bindgen::from_value(bs);
                         match a {
                             Ok(mess) => {
-                                // for i in (mess).iter() {
-                                //     log_obj(to_value(i).unwrap());
-                                // }
                                 search_result.set(mess);
                                 sr.set(("".to_string(), "".to_string()));
                             }
@@ -1425,25 +1239,13 @@ pub struct Timer {
     clock: Option<()>,
 }
 
-// #[wasm_bindgen(
-//     inline_js = "import '/public/hls.js';export class Hls2 extends Hls{constructor(){super(Hls);}}"
-// )]
-// #[wasm_bindgen(module = "https://cdn.jsdelivr.net/npm/@clappr/core@latest/dist/clappr-core.esm.js")]
-// extern "C" {
-//     #[wasm_bindgen(js_name=default)]
-//     type Clappr;
-//     #[wasm_bindgen(constructor,js_class=default)]
-//     fn new(options: JsValue) -> Clappr;
-//     #[wasm_bindgen(method)]
-//     fn attachMedia(this: &Clappr, element: JsValue);
-//     #[wasm_bindgen(method)]
-//     fn loadSource(this: &Clappr, source: JsValue);
-// }
-
 #[function_component(App)]
 pub fn app() -> Html {
     let state = use_state(|| true);
 
+    // use_effect(move || {
+    //     if web_sys::window().unwrap().document().unwrap().onmousemove().unwrap()
+    // });
     let maybe_display_link = move || -> Html {
         let state = state.clone();
         let cb: Callback<(), ()> = {
@@ -1452,14 +1254,13 @@ pub fn app() -> Html {
         };
         html! {<>
 
-                    <Login username={"".to_string()} password={"".to_string()} state={false} on_logged_in={cb}/>
-                    // <video id="video" controls={true} crossorigin="anonymous"></video>
-                      if *state {} else {
+                         <Login username={"".to_string()} password={"".to_string()} state={false} on_logged_in={cb}/>
+        if *state {} else {
 
-                <Search search_string={"".to_string()}/>
-            }
-            </>
-        }
+                     <Search search_string={"".to_string()}/>
+                 }
+                 </>
+             }
     };
     html! {
         <main class="container">

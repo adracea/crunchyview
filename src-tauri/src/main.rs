@@ -46,10 +46,6 @@ async fn login(
         .await
         .expect("Failed get account details.")
         .email;
-    // execute(crunchyroll.);
-    // .login_with_credentials(username, password)
-    // .await
-    // .expect("msg");
     Ok(format!(
         "Welcome {}, you have logged in. {} ",
         username, aid2
@@ -67,21 +63,6 @@ async fn login_anon(crunchyroll: State<'_, ViewerContext>) -> Result<String, Str
                 return Err(format!("Failed to log in.{}", _e));
             }
         });
-    // let aid = sess
-    //     .session
-    //     .lock()
-    //     .await
-    //     .clone()
-    //     .expect("Failed to log In.");
-    // let aid2 = aid
-    //     .account()
-    //     .await
-    //     .expect("Failed get account details.")
-    //     .email;
-    // execute(crunchyroll.);
-    // .login_with_credentials(username, password)
-    // .await
-    // .expect("msg");
     Ok(format!("Welcome {}, you have logged in.", "Anon"))
 }
 
@@ -331,7 +312,6 @@ async fn view_episode(
     ep_type: String,
     crunchyroll: State<'_, ViewerContext>,
 ) -> Result<EpisodeResult, String> {
-    // println!("Got called");
     let ses = &(*crunchyroll);
     let aid = ses.session.lock().await;
     let aid2 = if aid.as_ref().is_some() {
@@ -356,10 +336,8 @@ async fn view_episode(
             ep_type: String::from("secondary"),
         });
     }
-    // let test_res: MediaCollection = aid2?.media_collection_from_id(ep_id).await.unwrap();
     let mut subs: HashMap<String, String> = HashMap::new();
     let a = query_res.streams().await.unwrap();
-    // let a = query_res.playback().await.unwrap();
     for item in a.clone().subtitles {
         let a = "data:text/vtt;base64,".to_string()
             + &encode(
@@ -406,7 +384,6 @@ async fn view_episode(
         .adaptive_hls
         .unwrap()
         .url;
-    // println!("{:#?}", url);
     Ok(EpisodeResult {
         title: query_res.title,
         id: query_res.id,
@@ -442,8 +419,6 @@ async fn get_episodes(
         return Err("You are not logged in.".to_string());
     }
     let result: Vec<Media<Episode>>;
-    // println!("{:?}", series_id);
-    // println!("{:?}", ep_id);
     let sr_ep: MediaCollection = if series_id.is_some() {
         aid2?
             .media_collection_from_id(series_id.unwrap())
@@ -464,7 +439,6 @@ async fn get_episodes(
         MediaCollection::MovieListing(_) => {}
         MediaCollection::Movie(_) => {}
     }
-    // println!("{:#?}", sr_ep);
     let mut a: Vec<SearchResult> = vec![];
     if sr2.is_some() {
         let eps = sr2.unwrap().episodes().await;
@@ -535,64 +509,14 @@ async fn get_episodes(
             desc: ep3.description,
             img: i,
         });
-        // let a = sr_ep.
     }
-    // let query_res: Media<Season> = aid2?.media_from_id(series_name).await.unwrap();
-    // println!("{:#?}", a);
     Ok(a)
 }
-
-// async fn execute(ctx: ViewerContext) -> Result<(), std::io::Error> {
-//     if let Some(login_file_path) = login_file_path() {
-//         match ctx
-//             .session
-//             .lock()
-//             .as_mut()
-//             .unwrap()
-//             .as_mut()
-//             .unwrap()
-//             .session_token()
-//             .await
-//         {
-//             SessionToken::RefreshToken(refresh_token) => Ok(fs::write(
-//                 login_file_path,
-//                 format!("refresh_token:{}", refresh_token),
-//             )?),
-//             SessionToken::EtpRt(etp_rt) => {
-//                 Ok(fs::write(login_file_path, format!("etp_rt:{}", etp_rt))?)
-//             }
-//             SessionToken::Anonymous => panic!("Anonymous login cannot be saved"),
-//         }
-//     } else {
-//         panic!("Cannot find config path")
-//     }
-// }
-
-// pub fn login_file_path() -> Option<PathBuf> {
-//     dirs::config_dir().map(|config_dir| config_dir.join(".crunchy-cli-core"))
-// }
 
 #[derive(Default)]
 pub struct ViewerContext {
     pub session: Mutex<Option<Crunchyroll>>,
 }
-
-// async fn build_context() -> ViewerContext {
-//     ViewerContext {
-//         session: Mutex::new(Some(
-//             Crunchyroll::builder().login_anonymously().await.unwrap(),
-//         )),
-//     }
-// }
-
-// #[tauri::command(async)]
-// async fn toggle_decs(
-//     series_name: &str,
-//     crunchyroll: State<'_, ViewerContext>,
-// ) -> Result<(), String> {
-//     let a = tauri::api::http::ClientBuilder();
-//     Ok(())
-// }
 
 fn main() {
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
