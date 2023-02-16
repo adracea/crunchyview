@@ -1,0 +1,39 @@
+[package]
+name = "crunchyview"
+version = "0.0.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.57"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+crunchyroll-rs = {git="https://github.com/crunchy-labs/crunchyroll-rs"}
+dirs = "4.0"
+anyhow = "1.0"
+indicatif = "0.17"
+num_cpus = "1.14"
+log = { version = "0.4", features = ["std"] }
+async-trait = "0.1"
+base64 = "0.20"
+rsubs-lib = "0.1.6"
+# tauri-plugin-localhost = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
+# portpicker = "0.1" # used in the example to pick a random free port
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.23", features = ["macros","sync", "rt-multi-thread", "time"] }
+tauri = { version = "1", features = ["api-all", "devtools", "reqwest-client", "reqwest-native-tls-vendored"] }
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]
