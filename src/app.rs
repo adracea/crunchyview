@@ -331,7 +331,7 @@ pub struct Nep {
     cb: Callback<String>,
 }
 
-#[wasm_bindgen(module = "/public/hls.esm.js")]
+#[wasm_bindgen(module = "/public/dist/hls.esm.js")]
 extern "C" {
     #[wasm_bindgen(js_name=default)]
     type Hls;
